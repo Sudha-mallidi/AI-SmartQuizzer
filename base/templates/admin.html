@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7f8;
+    }
+
+    .login-wrapper {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .login-container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      width: 400px;
+      text-align: center;
+    }
+
+    .login-container h2 {
+      color: #16a085;
+      margin-bottom: 25px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .login-container input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 12px;
+      background: #16a085;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .login-container button:hover {
+      background: #138d75;
+    }
+
+    .home-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background: #3498db;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .home-btn:hover {
+      background: #2980b9;
+    }
+
+    .messages {
+      margin-top: 15px;
+    }
+
+    .messages p {
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-wrapper">
+    <!-- Home Button at top-right -->
+    <a href="{% url 'home' %}" class="home-btn"><i class="fa-solid fa-house"></i> Home</a>
+
+    <!-- Optional logout message -->
+    {% if logout_message %}
+      <div class="messages">
+        <p>{{ logout_message }}</p>
+      </div>
+    {% endif %}
+
+    <div class="login-container">
+      <h2>Admin Login</h2>
+      <form method="POST" action="{% url 'adminlogin' %}">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
+      </form>
+
+      {% if messages %}
+        <div class="messages">
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

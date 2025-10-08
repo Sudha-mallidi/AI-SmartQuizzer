@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: #f4f6f9;
+      color: #2c3e50;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 220px;
+      height: 100%;
+      background: #2c3e50;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar h2 {
+      text-align: center;
+      padding: 20px;
+      background: #1a252f;
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 1px;
+    }
+    .sidebar a {
+      padding: 15px 20px;
+      color: #ecf0f1;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: 0.3s;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background: #34495e;
+      color: #1abc9c;
+    }
+    .sidebar a.logout {
+      margin-top: auto;
+      background: #e74c3c;
+    }
+    .sidebar a.logout:hover {
+      background: #c0392b;
+    }
+
+    /* Top Navbar */
+    .topnav {
+      margin-left: 220px;
+      height: 90px;
+      background: #ffffff;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 25px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-radius: 0 0 12px 12px;
+    }
+    .nav-title {
+      text-align: center;
+    }
+    .nav-title i {
+      font-size: 28px;
+      color: #3498db;
+      margin-bottom: 5px;
+    }
+    .nav-title span {
+      display: block;
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #3498db, #2ecc71);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+    .nav-title small {
+      display: block;
+      font-size: 14px;
+      color: #7f8c8d;
+      margin-top: 2px;
+    }
+    .user-info {
+      position: absolute;
+      right: 25px;
+      font-size: 16px;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+
+    /* Content */
+    .content {
+      margin-left: 220px;
+      padding: 30px;
+    }
+    .tab-section {
+      display: none;
+    }
+    .tab-section.active {
+      display: block;
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 30px;
+    }
+    .card h2 {
+      margin-bottom: 15px;
+      font-size: 22px;
+      color: #2c3e50;
+    }
+
+    /* Dashboard Stats */
+    .stats-container {
+      display: flex;
+      gap: 25px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .stats-card {
+      flex: 1;
+      min-width: 220px;
+      text-align: center;
+      border-radius: 15px;
+      padding: 25px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .stats-card:hover {
+      transform: translateY(-5px);
+    }
+    .stats-card h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+    .stats-card p {
+      font-size: 28px;
+      margin: 0;
+      font-weight: bold;
+    }
+
+    /* Form Styling */
+    .form-card {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .form-card label {
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #2c3e50;
+    }
+    .form-card select {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      transition: 0.2s;
+    }
+    .form-card select:focus {
+      border-color: #3498db;
+      outline: none;
+      box-shadow: 0 0 4px rgba(52,152,219,0.4);
+    }
+    .submit-btn {
+      align-self: flex-start;
+      padding: 12px 20px;
+      background: #3498db;
+      border: none;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .submit-btn:hover {
+      background: #2980b9;
+    }
+
+    /* Table Styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background:#3498db;
+      color:white;
+    }
+
+    @media screen and (max-width: 768px) {
+      .sidebar { width: 60px; }
+      .content { margin-left: 60px; padding: 15px; }
+      .sidebar h2 { font-size: 16px; padding: 15px; }
+      .stats-container { flex-direction: column; }
+    }
+
+    .btn-review {
+    display: inline-block;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, #40739e, #273c75);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.9em;
+    transition: background 0.25s ease-in-out;
+}
+.btn-review:hover {
+    background: #273c75;
+}
+
+.suggestions-box {
+  margin-top: 30px; 
+  padding: 20px; 
+  border-radius: 15px;
+  background: #f0f7ff; /* light blue background */
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}
+
+.accordion-button {
+  font-weight: bold;
+  background: #e3f2fd; 
+  color: #2c3e50;
+}
+
+.accordion-button:not(.collapsed) {
+  background: #90caf9;
+  color: #000;
+}
+
+.suggestion-item {
+  background: #ffffff;
+  border-left: 5px solid #3498db; 
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+}
+
+.suggestion-item:hover {
+  background: #bbebf2;
+}
+
+.highlight-current { background-color: #ff6b6b; color:white; padding:5px 10px; border-radius:8px; }
+.highlight-next { background-color: #1dd1a1; color:white; padding:5px 10px; border-radius:8px; }
+.highlight-avg { background-color: #54a0ff; color:white; padding:5px 10px; border-radius:8px; }
+
+.suggestions-title {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+</style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>User Panel</h2>
+    <a href="javascript:void(0)" data-tab="dashboard" onclick="openTab('dashboard')" class="active">
+      <i class="fa-solid fa-house"></i> Dashboard
+    </a>
+    <a href="javascript:void(0)" data-tab="take_quiz" onclick="openTab('take_quiz')">
+      <i class="fa-solid fa-pen-to-square"></i> Take Quiz
+    </a>
+    <a href="javascript:void(0)" data-tab="results" onclick="openTab('results')">
+      <i class="fa-solid fa-chart-line"></i> Results
+    </a>
+
+    <a href="javascript:void(0)" data-tab="history" onclick="openTab('history')">
+      <i class="fa-solid fa-chart-line"></i> Quiz History
+    </a>
+    <a href="javascript:void(0)" data-tab="profile" onclick="openTab('profile')">
+      <i class="fa-solid fa-user"></i> Profile
+    </a>
+    <a href="{% url 'userlogout' %}" class="logout">
+      <i class="fa-solid fa-right-from-bracket"></i> Logout
+    </a>
+  </div>
+
+  <!-- Top Navbar -->
+  <div class="topnav">
+    <div class="nav-title">
+      <i class="fa-solid fa-user-graduate"></i>
+      <span>User Dashboard</span>
+      <small>Manage your learning</small>
+    </div>
+    <div class="user-info">
+      <i class="fa-solid fa-user-circle"></i> {{ user.username }}
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="tab-section active">
+      <div class="card">
+        <h2>Welcome, {{ user.username }} 🎉</h2>
+        <p style="color:#7f8c8d; margin-top:5px;">Here’s an overview of your account.</p>
+        <div class="stats-container">
+          <div class="stats-card" style="background:#3498db;">
+            <h3>Materials Added</h3>
+            <p><strong>{{ materials_count }}</strong></p>
+          </div>
+          <div class="stats-card" style="background:#1abc9c;">
+            <h3>Completed Quizzes</h3>
+            <p>{{ completed_quizzes }}</p>
+          </div>
+        </div>
+      </div>
+
+      {% if suggestions_by_topic %}
+        <div class="suggestions-box">
+          <p class="suggestions-title">🤖 Personalized AI Suggestions</p>
+            <div class="accordion" id="suggestionsAccordion">
+
+              {% for topic, suggestions in suggestions_by_topic.items %}
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingTopic{{ forloop.counter }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTopic{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseTopic{{ forloop.counter }}">
+                      📘 {{ topic }}
+                    </button>
+                  </h2>
+                  <div id="collapseTopic{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="headingTopic{{ forloop.counter }}" data-bs-parent="#suggestionsAccordion">
+                    <div class="accordion-body">
+                      {% for s in suggestions %}
+                        <div class="suggestion-item">
+                          <p><strong>Subtopic:</strong> {{ s.subtopic }}</p>
+                          <p>
+                            {% if s.next_level == "next topic" %}
+                              🚀 Great job mastering <span class="highlight-current">{{ s.current_level }}</span>! Time to move to the next topic.
+                            {% else %}
+                              🎯 Fantastic! You’ve mastered <span class="highlight-current">{{ s.current_level }}</span>. Time to challenge yourself with <span class="highlight-next">{{ s.next_level }}</span> MCQs.
+                            {% endif %}
+                          </p>
+                          <p>
+                            <span class="highlight-current">Current: {{ s.current_level }}</span> | 
+                            <span class="highlight-next">Next: {{ s.next_level }}</span> | 
+                            <span class="highlight-avg">Avg Score: {{ s.avg_score }}%</span>
+                          </p>
+                        </div>
+                      {% endfor %}
+
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+
+            </div>
+        </div>
+      {% endif %}
+    </div>  
+
+    <!-- Take Quiz Section -->
+    <div id="take_quiz" class="tab-section">
+      <div class="card">
+        <h2>Attempt a Quiz</h2>
+        <form method="POST" action="{% url 'start_quiz' %}" class="form-card">
+          {% csrf_token %}
+
+          <label for="topic">Topic</label>
+          <select id="topic" name="topic">
+            <option value="">-- Select Topic --</option>
+            {% for topic in topics %}
+               <option value="{{ topic.name }}">{{ topic.name }}</option>
+            {% endfor %}
+          </select>
+
+          <label for="subtopic">Subtopic</label>
+          <select id="subtopic" name="subtopic">
+           <option value="">-- Select Subtopic --</option>
+          </select> 
+
+          <label for="id_level">Difficulty Level</label>
+          <select name="level" id="id_level">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+
+          <label for="num_questions">Number of Questions</label>
+          <select name="num_questions" id="num_questions">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+          </select>
+
+          <button type="submit" class="submit-btn">
+            <i class="fa-solid fa-pen-to-square"></i> Start Quiz
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results" class="tab-section">
+      <div class="card">
+        <h2>Quiz Results</h2>
+        {% if results %}
+        <canvas id="resultsChart" style="margin-top:20px;"></canvas>
+        <table>
+          <thead>
+            <tr>
+              <th>Topic</th>
+              <th>Subtopic</th>
+              <th>Level</th>
+              <th>Score</th>
+              <th>Date Attempted</th>
+              <th>Status</th>
+              <th>Review</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for result in results %}
+            <tr>
+              <td>{{ result.topic }}</td>
+              <td>{{ result.subtopic }}</td>
+              <td>{{ result.difficulty_level|title }}</td>
+              <td>{{ result.correct_answers }} / {{ result.total_questions }}</td>
+              <td>{{ result.date_attempted|date:"Y-m-d H:i" }}</td>
+              <td>
+                {% if result.status == "Passed" %}
+                  <span style="color: green;">{{ result.status }}</span>
+                {% else %}
+                  <span style="color: red;">{{ result.status }}</span>
+                {% endif %}
+              </td>
+              <td>  <!-- Separate column for Review -->
+                {% if result.id %}
+                  <a href="{% url 'quiz_review' result.id %}" class="btn-review" target="_blank">Review</a>
+                {% else %}
+                  <span style="color:#7f8c8d;">N/A</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <p style="color:#7f8c8d; margin-top:20px;">You haven't attempted any quizzes yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  <!-- Pie Chart -->
+    <div class="chart-container">
+        <canvas id="scorePieChart"></canvas>
+    </div>
+ 
+    <!-- Quiz History Section -->
+    <div id="history" class="tab-section">
+      <div class="card">
+        <h2>Quiz History</h2>
+        {% if quiz_history %}
+        <div style="margin-top: 20px; overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Topic</th>
+                <th>Subtopic</th>
+                <th>Difficulty</th>
+                <th>Number of Quizzes Taken</th>
+                <th>Average Score (%)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for h in quiz_history %}
+              <tr>
+                <td>{{ h.topic }}</td>
+                <td>{{ h.subtopic }}</td>
+                <td>{{ h.difficulty_level|title}}</td>
+                <td>{{ h.num_quizzes }}</td>
+                <td>{{ h.avg_score|floatformat:2 }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p style="color:#7f8c8d; margin-top:20px; font-style:italic;">
+          You haven't attempted any quizzes yet.
+        </p>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- Profile Section -->
+    <div id="profile" class="tab-section">
+      <div class="card">
+        <h2>Profile Information</h2>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Contact:</strong> {{ user.contact }}</p>
+        <p><strong>Gender:</strong> {{ user.gender }}</p>
+      </div>
+    </div>
+  </div>
+  <script>
+  function openTab(tabName) {
+    const sections = document.querySelectorAll(".tab-section");
+    sections.forEach(s => s.classList.remove("active"));
+    document.getElementById(tabName).classList.add("active");
+
+    const links = document.querySelectorAll(".sidebar a");
+    links.forEach(l => l.classList.remove("active"));
+    document.querySelector(`.sidebar a[data-tab="${tabName}"]`).classList.add("active");
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Open dashboard tab by default
+    openTab('dashboard');
+
+    const topicSelect = document.getElementById("topic");
+    const subtopicSelect = document.getElementById("subtopic");
+
+    topicSelect.addEventListener("change", function () {
+      const topic = this.value;
+
+      // Clear old options
+      subtopicSelect.innerHTML = '<option value="">-- Select Subtopic --</option>';
+
+      if (topic) {
+        fetch(`/get_subtopics/?topic=${encodeURIComponent(topic)}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.subtopics && data.subtopics.length > 0) {
+              data.subtopics.forEach(st => {
+                const option = document.createElement("option");
+                option.value = st.name;
+                option.textContent = st.name;
+                subtopicSelect.appendChild(option);
+              });
+            } else {
+              const option = document.createElement("option");
+              option.textContent = "No subtopics found";
+              subtopicSelect.appendChild(option);
+            }
+          })
+          .catch(err => console.error("Error fetching subtopics:", err));
+      }
+    });
+  });
+</script>
+</body>
+</html>

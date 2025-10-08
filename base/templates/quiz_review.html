@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Review</title>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<style>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fc;
+    margin: 0;
+    padding: 0;
+    color: #2c3e50;
+}
+header {
+    background: linear-gradient(135deg, #40739e, #273c75);
+    padding: 18px 0;
+    text-align: center;
+    color: #fff;
+    font-size: 26px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    letter-spacing: 1px;
+}
+.container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* Question Cards */
+.question-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    padding: 20px;
+}
+.question-text {
+    font-weight: 600;
+    font-size: 1.15em;
+    margin-bottom: 12px;
+}
+.answers {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.answer-option {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #dcdde1;
+    background-color: #f4f6f9;
+    transition: all 0.2s ease-in-out;
+}
+.answer-option.correct {
+    background-color: #e9f9ee;
+    border-color: #27ae60;
+    color: #27ae60;
+}
+.answer-option.wrong {
+    background-color: #fdeaea;
+    border-color: #c23616;
+    color: #c23616;
+}
+
+/* Back Button */
+.btn-container {
+    text-align: center;
+    margin-top: 30px;
+}
+.btn-container a {
+    display: inline-block;
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #40739e, #273c75);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+}
+.btn-container a:hover {
+    background: linear-gradient(135deg, #273c75, #192a56);
+}
+</style>
+</head>
+<body>
+<header>Quiz Review - {{ quiz_result.topic }}</header>
+
+<div class="container">
+    {% if results %}
+        {% for r in results %}
+        <div class="question-card">
+            <div class="question-text">{{ forloop.counter }}. {{ r.question }}</div>
+            <div class="answers">
+              {% for key, text in r.options.items %}
+                    <div class="answer-option
+                        {% if key == r.correct_answer_letter %}correct
+                        {% elif key == r.user_answer_letter and r.user_answer_letter != r.correct_answer_letter %}wrong
+                        {% endif %}">
+                        <strong>{{ key }}:</strong> {{ text }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p style="color:#7f8c8d;">No questions found for this quiz attempt.</p>
+    {% endif %}
+
+    <div class="btn-container">
+        <a href="{% url 'userdashboard' %}">Back to Dashboard</a>
+    </div>
+</div>
+</body>
+</html>

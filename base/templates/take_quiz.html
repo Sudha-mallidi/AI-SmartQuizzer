@@ -1,0 +1,177 @@
+{% load static %}
+{% load custom_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Quiz</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f6fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Centered Quiz Container */
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #2f3640;
+            margin-bottom: 8px;
+        }
+
+        .progress {
+            text-align: center;
+            color: #718093;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Question Card */
+        .question-card {
+            background-color: #f1f2f6;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 6px solid #40739e;
+            margin-bottom: 25px;
+        }
+
+        .question-card p {
+            font-size: 1.15em;
+            color: #2f3640;
+        }
+
+        /* Options Styling */
+        .options label {
+            display: block;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background-color: #dcdde1;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            color: #2f3640;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .options label:hover {
+            background-color: #40739e;
+            color: #fff;
+        }
+
+        .options input[type="radio"]:checked + span {
+            font-weight: bold;
+            color: #34495b;
+        }
+
+        .options input[type="radio"]:checked + span:hover {
+    color: #fff; /* text visible when hovering selected */
+}
+
+        /* Button Container */
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn-container button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            background-color: #40739e;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-container button:hover {
+            background-color: #273c75;
+        }
+
+        .btn-container button:disabled {
+            background-color: #dcdde1;
+            cursor: not-allowed;
+            color: #7f8fa6;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .btn-container {
+                flex-direction: column;
+            }
+
+            .btn-container button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>{{ topic }} - {{ subtopic }} ({{ level|title }})</h2>
+        <div class="progress">
+            Question {{ current_index }} of {{ total_questions }}
+        </div>
+
+        <form method="POST" action="{% url 'take_quiz' %}">
+            {% csrf_token %}
+            <input type="hidden" name="question_id" value="{{ question.id }}">
+
+            <div class="question-card">
+                <p>{{ question.question }}</p>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="answer" value="A"
+                        {% if answers|get_item:question.id|stringformat:"s" == "A" %}checked{% endif %}>
+                        <span>{{ question.option_a }}</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="answer" value="B"
+                        {% if answers|get_item:question.id|stringformat:"s" == "B" %}checked{% endif %}>
+                        <span>{{ question.option_b }}</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="answer" value="C"
+                        {% if answers|get_item:question.id|stringformat:"s" == "C" %}checked{% endif %}>
+                        <span>{{ question.option_c }}</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="answer" value="D"
+                        {% if answers|get_item:question.id|stringformat:"s" == "D" %}checked{% endif %}>
+                        <span>{{ question.option_d }}</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button type="submit" name="direction" value="previous" {% if current_index == 1 %}disabled{% endif %}>Previous</button>
+                <button type="submit" name="direction" value="next">{% if is_last %}Finish{% else %}Next{% endif %}</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

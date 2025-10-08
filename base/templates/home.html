@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartQuizzer</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f0f4ff, #e6e9ff);
+      color: #333;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: #4a6cf7;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-buttons .btn {
+      background: #fff;
+      color: #4a6cf7;
+      text-decoration: none;
+      padding: 8px 18px;
+      margin-left: 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .nav-buttons .btn:hover {
+      background: #e0e0ff;
+      transform: scale(1.05);
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+.container h1 {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  color: #4a6cf7;
+  font-weight: 700;
+}
+
+.features {
+  text-align: left;
+  margin: 30px 0;
+}
+
+.features h2 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.4rem;
+  border-left: 4px solid #4a6cf7;
+  padding-left: 8px;
+}
+
+.features ul {
+  list-style: none;
+  padding: 0;
+}
+
+.features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f5f7ff;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  transition: 0.3s;
+  font-size: 1.05rem;
+}
+
+.features li:hover {
+  background: #e0e5ff;
+  transform: translateX(8px);
+}
+
+.features .material-icons {
+      color: #4a6cf7;
+      font-size: 22px;
+}
+
+.cta {
+  margin-top: 25px;
+  font-size: 1.1rem;
+}
+
+.cta a {
+  color: #4a6cf7;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.cta a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    text-align: center;
+  }
+  .nav-buttons {
+    margin-top: 10px;
+  }
+  .container {
+    margin: 30px 15px;
+    padding: 25px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">SmartQuizzer</div>
+    <div class="nav-buttons">
+      <a href="/login" class="btn">Login</a>
+      <a href="/register" class="btn">Register</a>
+      <a href="{% url 'adminlogin' %}" class="btn">Admin Login</a>
+    </div>
+  </header>
+  
+  <main class="container">
+    <h1>SmartQuizzer - AI Generated Quiz</h1>
+    <div class="features">
+      <h2>What this app will do</h2>
+      <ul>
+        <li>Choose your quiz topic and difficulty level</li>
+        <li>Get fresh, random questions every time</li>
+        <li>Receive suggestions based on your performance</li>
+        <li>Keep track of your quiz history for future use</li>
+      </ul>
+    </div>
+    
+    <div class="cta">
+      <p>If you’re new here, <a href="/register">register now</a></p>
+      <p>Already have an account? <a href="/login">login</a></p>
+    </div>
+  </main>
+</body>
+</html>

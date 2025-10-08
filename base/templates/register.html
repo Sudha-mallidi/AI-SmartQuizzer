@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #18c98e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 110vh;
+      margin: 0;
+    }
+
+    .form-container {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 10px;
+      width: 350px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .form-container h2 {
+      text-align: left;
+      color: green;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: rgb(100, 99, 99);
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background: #218838;
+    }
+
+    .messages {
+      text-align: center;
+      color: red;
+      margin-bottom: 10px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Registration Form</h2>
+
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'register' %}">
+    {% csrf_token %}
+
+    <label>User Name:</label>
+    <input type="text" name="username" required>
+
+    <label>First Name:</label>
+    <input type="text" name="first_name" required>
+
+    <label>Last Name:</label>
+    <input type="text" name="last_name" required>
+
+
+    <label>Email:</label>
+    <input type="email" name="email" required>
+
+    <label>Contact:</label>
+    <input type="text" name="contact">
+
+    <label>Gender:</label>
+    <select name="gender">
+      <option value="M">Male</option>
+      <option value="F">Female</option>
+      <option value="O">Other</option>
+    </select>
+
+    <label>Password:</label>
+    <input type="password" name="password" required>
+
+    <label>Retype Password:</label>
+    <input type="password" name="retype_password" required>
+    <button type="submit" class="submit-btn">Register</button>
+  </form>
+
+  
+  <div style="text-align:center; margin-top:10px;">
+      Already have an account? <a href="{% url 'login' %}">Login here</a>
+  </div>
+  </div>
+</body>
+</html>
